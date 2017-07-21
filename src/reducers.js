@@ -1,7 +1,5 @@
 'use strict';
 
-// import { combineReducers } from 'redux';
-
 class MultuReducerState {
     constructor(Constructor, def={}) {
         Object

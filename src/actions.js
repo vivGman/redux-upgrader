@@ -1,34 +1,5 @@
 'use strict';
 
-const error_time = 7 * 1000;
-
-function requestSuccess(acts, disp, ...actionParams) {
-    return response => (
-        requestStatus(acts, disp, response),
-        disp({ type: acts.SUCCESS, data: response.body, params: actionParams || [], text: response.body ? null : response.text }),
-        response
-    )
-}
-
-function requestFailure(acts, disp, ...actionParams) {
-    return error => {
-        requestStatus(acts, disp, error);
-        disp({ type: acts.FAILURE, error, params: actionParams || [] });
-    }
-}
-
-function requestStatus(acts, disp, resp) {
-    if (acts.hasOwnProperty('STATUS')) {
-        disp({ 
-            type: acts.STATUS, 
-            status: resp.statusCode || resp.status 
-        });
-        setTimeout(function() {
-            disp({ type: acts.STATUS });
-        }, error_time);
-    }
-}
-
 export function actionCreator(type, data, params = []) {
     return { 
         type, 
