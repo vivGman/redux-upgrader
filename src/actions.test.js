@@ -2,42 +2,38 @@
 
 import { actionCreator, ApiAction, ApiActions } from './actions.js'
 
-const type = "SET_USER_NAME"
-
-test(`Create simple action ${type} for "Вася"`, () => {
-    const name = "Вася";
+test(`Create simple action "SET_USER_NAME" for "Вася"`, () => {
     const action = {
-        type: type, 
-        data: name
+        type: "SET_USER_NAME", 
+        data: "Вася"
     };
 
-    expect(actionCreator(type, name)).toMatchObject(action);
+    expect(actionCreator("SET_USER_NAME", name)).toMatchObject(action);
 });
 
-test(`Create simple action ${type} for "Петя" with params`, () => {
-    const name = "Петя";
+test(`Create simple action "SET_USER_NAME" for "Петя" with params`, () => {
     const action = {
-        type: type, 
-        data: name, 
+        type: "SET_USER_NAME", 
+        data: "Петя", 
         params: [1,2,3]
     };
 
-    expect(actionCreator(type, name, [1,2,3])).toMatchObject(action);
+    expect(actionCreator("SET_USER_NAME", name, [1,2,3])).toMatchObject(action);
 });
 
 
-test(`Create types for API action ${type}`, () => {
+test(`Create types for API action "SET_USER_NAME"`, () => {
     const actions = {
-        REQUEST: type + '_REQUEST', 
-        SUCCESS: type + '_SUCCESS', 
-        FAILURE: type + '_FAILURE', 
-        RESET:   type + '_RESET'
+        REQUEST: 'SET_USER_NAME_REQUEST', 
+        SUCCESS: 'SET_USER_NAME_SUCCESS', 
+        FAILURE: 'SET_USER_NAME_FAILURE', 
+        RESET:   'SET_USER_NAME_RESET'
     };
 
-    expect(new ApiAction(type)).toMatchObject(actions);
+    expect(new ApiAction("SET_USER_NAME")).toMatchObject(actions);
 });
 
-test(`Create types for API actions ${type} and "SET_USER_EMAIL"`, () => {
+test(`Create types for API actions "SET_USER_NAME" and "SET_USER_EMAIL"`, () => {
     const SET_USER_NAME = {
         REQUEST: 'SET_USER_NAME_REQUEST', 
         SUCCESS: 'SET_USER_NAME_SUCCESS', 
@@ -52,8 +48,10 @@ test(`Create types for API actions ${type} and "SET_USER_EMAIL"`, () => {
         RESET:   'SET_USER_EMAIL_RESET'
     }
 
-    expect(new ApiActions("SET_USER_NAME", "SET_USER_EMAIL")).toMatchObject({
+    const result = {
         SET_USER_NAME: SET_USER_NAME,
         SET_USER_EMAIL: SET_USER_EMAIL
-    });
+    }
+
+    expect(new ApiActions("SET_USER_NAME", "SET_USER_EMAIL")).toMatchObject();
 });
