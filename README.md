@@ -123,13 +123,30 @@ combineReducers({
 
 Без ReduxUpgrader
 ```javascript
-import { REQUEST, SUCCESS, FAILURE } from 'actions/todo';
+import { GET_TODO_LIST } from 'actions/todo';
 
-function todolist(action, state = []) {
+const defaultTodoList = {
+    pending: false,
+    payload: [],
+    error: null
+}
+
+function todolist(action, state = defaultTodoList) {
     switch(action.type) {
-        case REQUEST: return state;
-        case SUCCESS: return action.data;
-        case FAILURE: return state;
+        case GET_TODO_LIST.REQUEST: return {
+            ...state,
+            pending: true
+        };
+        case GET_TODO_LIST.SUCCESS: return {
+            pending: false,
+            payload: action.data,
+            error: null
+        };
+        case GET_TODO_LIST.FAILURE: return {
+            pending: false,
+            payload: [],
+            error: action.error
+        };
         default: state
     }
 }
@@ -139,7 +156,7 @@ combineReducers({
 })
 ```
 
-Ghb При использовании ReduxUpgrader
+При использовании ReduxUpgrader
 ```javascript
 import { GET_TODO_LIST } from 'actions/todo';
 combineReducers({
