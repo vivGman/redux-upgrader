@@ -8,7 +8,8 @@ test(`Create simple action "SET_USER_NAME" for "Вася"`, () => {
         data: "Вася"
     };
 
-    expect(actionCreator("SET_USER_NAME", name)).toMatchObject(action);
+    expect(actionCreator("SET_USER_NAME", "Вася"))
+        .toMatchObject(action);
 });
 
 test(`Create simple action "SET_USER_NAME" for "Петя" with params`, () => {
@@ -18,7 +19,8 @@ test(`Create simple action "SET_USER_NAME" for "Петя" with params`, () => {
         params: [1,2,3]
     };
 
-    expect(actionCreator("SET_USER_NAME", name, [1,2,3])).toMatchObject(action);
+    expect(actionCreator("SET_USER_NAME", "Петя", [1,2,3]))
+        .toMatchObject(action);
 });
 
 
@@ -30,7 +32,8 @@ test(`Create types for API action "SET_USER_NAME"`, () => {
         RESET:   'SET_USER_NAME_RESET'
     };
 
-    expect(new ApiAction("SET_USER_NAME")).toMatchObject(actions);
+    expect(new ApiAction("SET_USER_NAME"))
+        .toMatchObject(actions);
 });
 
 test(`Create types for API actions "SET_USER_NAME" and "SET_USER_EMAIL"`, () => {
@@ -53,5 +56,6 @@ test(`Create types for API actions "SET_USER_NAME" and "SET_USER_EMAIL"`, () => 
         SET_USER_EMAIL: SET_USER_EMAIL
     }
 
-    expect(new ApiActions("SET_USER_NAME", "SET_USER_EMAIL")).toMatchObject();
+    expect(new ApiActions("SET_USER_NAME", "SET_USER_EMAIL"))
+        .toMatchObject(result);
 });

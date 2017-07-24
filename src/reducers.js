@@ -77,8 +77,12 @@ export const boundApiReducer = (types, Constructor, extendKey=null, prepare=(act
 export function boundReducer(reducerType, Constructor = Object) {
     return (state, action) => {
         switch (action.type) {
-            case reducerType: return action.data;
-            default: return state || new Constructor();
+            case reducerType: {
+                return action.data
+            };
+            default: {
+                return state || new Constructor().valueOf()
+            };
         }
     }
 }

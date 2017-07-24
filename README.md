@@ -151,7 +151,7 @@ const defaultTodoList = {
     error: null
 }
 
-function todolist(action, state = defaultTodoList) {
+function todolist(state = defaultTodoList, action) {
     switch(action.type) {
         case GET_TODO_LIST.REQUEST: return {
             ...state,
