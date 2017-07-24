@@ -11,7 +11,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "http://gitlab.srv.pv.km/frontend/redux-upgrader"
+    "url": "https://github.com/vivGman/redux-upgrader"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
