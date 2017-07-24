@@ -25,6 +25,13 @@ const setUserName = actionCreator.bind(null, 'SET_USER_NAME');
 dispatch(setUserName('Вася'))
 ```
 
+```json
+{
+    "type": "SET_USER_NAME",
+    "data": "Вася"
+}
+```
+
 ### ApiAction
 
 Параметры:
@@ -32,7 +39,17 @@ dispatch(setUserName('Вася'))
 * `traceStatus` - флаг, сообщающий о том будет ли отслеживаться статус выполнения запроса
 
 ```javascript
-new ApiAction('SET_TODO')
+const SET_TODO = new ApiAction('SET_TODO')
+
+dispatch(actionCreator(SET_TODO.REQUEST));
+
+fetch('/set_todo').then(json => {
+    dispatch(actionCreator(SET_TODO.SUCCESS, json));
+    return json;
+}).catch(error => {
+    dispatch(actionCreator(SET_TODO.FAILURE, error));
+    return error;
+})
 ```
 
 ```json
@@ -85,6 +102,13 @@ Reducers
 combineReducers({
     user_name: boundReducer('SET_USER_NAME', String)
 })
+```
+
+Состояние стэйта после экшна SET_USER_NAME
+```json
+{
+    "user_name": "Вася"
+}
 ```
 
 ### boundApiReducer
