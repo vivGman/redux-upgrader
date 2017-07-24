@@ -121,7 +121,27 @@ combineReducers({
 
 в качестве аргументов для `extendKey` и `prepare` передаются action и state
 
-Без ReduxUpgrader
+```javascript
+import { GET_TODO_LIST } from 'actions/todo';
+export default combineReducers({
+    todolist: boundApiReducer(GET_TODO_LIST, Array)
+})
+```
+
+Состояние стэйта после начала запроса
+```json
+{
+    "todolist": {
+        "pending": true,
+        "payload": [],
+        "status": null,
+        "error": null
+    }
+}
+```
+
+Для сравнения, без использования ReduxUpgrader код редюссера воссоздающий такой же функционал выглядел бы следующим образом:
+
 ```javascript
 import { GET_TODO_LIST } from 'actions/todo';
 
@@ -151,27 +171,8 @@ function todolist(action, state = defaultTodoList) {
     }
 }
 
-combineReducers({
+export default combineReducers({
     todolist
 })
 ```
 
-При использовании ReduxUpgrader
-```javascript
-import { GET_TODO_LIST } from 'actions/todo';
-combineReducers({
-    todolist: boundApiReducer(GET_TODO_LIST, Array)
-})
-```
-
-Состояние стэйта после начала запроса
-```json
-{
-    "todolist": {
-        "pending": true,
-        "payload": [],
-        "status": null,
-        "error": null
-    }
-}
-```
