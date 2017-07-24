@@ -121,7 +121,27 @@ combineReducers({
 
 в качестве аргументов для `extendKey` и `prepare` передаются action и state
 
+Без ReduxUpgrader
 ```javascript
+import { REQUEST, SUCCESS, FAILURE } from 'actions/todo';
+
+function todolist(action, state = []) {
+    switch(action.type) {
+        case REQUEST: return state;
+        case SUCCESS: return action.data;
+        case FAILURE: return state;
+        default: state
+    }
+}
+
+combineReducers({
+    todolist
+})
+```
+
+Ghb При использовании ReduxUpgrader
+```javascript
+import { GET_TODO_LIST } from 'actions/todo';
 combineReducers({
     todolist: boundApiReducer(GET_TODO_LIST, Array)
 })
