@@ -21,9 +21,8 @@ Actions
 * `params` - массив дополнительных параметрых, используются по усмотрению программиста
 
 ```javascript
-dispatch(
-    actionCreator('SET_USER_NAME', 'Вася')
-)
+const setUserName = actionCreator.bind(null, 'SET_USER_NAME');
+dispatch(setUserName('Вася'))
 ```
 
 ### ApiAction
