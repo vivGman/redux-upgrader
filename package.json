@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "jest",
-    "build": "babel ./src --presets babel-preset-es2015 --out-dir lib"
+    "build": "npm test && babel ./src --presets babel-preset-es2015 --out-dir lib"
   },
   "author": "victorov@corp.sputnik.ru",
   "license": "ISC",
