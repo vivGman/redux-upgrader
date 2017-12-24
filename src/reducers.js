@@ -32,7 +32,7 @@ const apiReducer = (types, Constructor, prepare, state, action) => {
             return new ApiState(false, new Constructor());
         case types.SUCCESS: 
             action.data = action.data || new Constructor();
-            return new ApiState(false, prepare(action), null, state.status);
+            return new ApiState(false, prepare(action, state), null, state.status);
         case types.FAILURE: 
             return new ApiState(false, state.payload, action.error, state.status);
         case types.STATUS:  
@@ -54,7 +54,7 @@ const multiApiReducer = (types, Constructor, extendKey, prepare, state, action) 
                 return _state.setValue(key, new ApiState(false, new Constructor()));
             case types.SUCCESS: 
                 action.data = action.data || new Constructor();
-                return _state.setValue(key, new ApiState(false, prepare(action), null, _curr.status));
+                return _state.setValue(key, new ApiState(false, prepare(action, state), null, _curr.status));
             case types.FAILURE: 
                 return _state.setValue(key, new ApiState(false, _curr.payload, action.error, _curr.status));
             case types.STATUS: 
