@@ -8,37 +8,34 @@ class MultuReducerState {
         this.Constructor = Constructor;
     }
     getValue(key) {
-        return this[key] || {
-            payload: new this.Constructor()
-        }
+        return this[key] || new ApiState(false, new this.Constructor(), {}, false)
     }
     setValue(key, value) {
         return this[key] = value, this;
     }
 }
 
-function ApiState(pending=false, payload, error={}, status=null) {
+function ApiState(pending=false, payload, error={}, isInited=false) {
     this.pending = pending;
     this.payload = payload;
     this.error   = error;
-    this.status  = status;
+    this.updatedAt = new Date();
+    this.isInited = isInited
 }
 
 const apiReducer = (types, Constructor, prepare, state, action) => {
     switch (action.type) {
         case types.REQUEST:
-            return new ApiState(true, state.payload, state.error, state.status);
+            return new ApiState(true, state.payload, state.error, true);
         case types.RESET:
-            return new ApiState(false, new Constructor());
+            return new ApiState(false, new Constructor(), {}, false);
         case types.SUCCESS: 
             action.data = action.data || new Constructor();
-            return new ApiState(false, prepare(action, state), null, state.status);
+            return new ApiState(false, prepare(action, state), null, true);
         case types.FAILURE: 
-            return new ApiState(false, state.payload, action.error, state.status);
-        case types.STATUS:  
-            return new ApiState(state.pending, state.payload, state.error, action.status);
+            return new ApiState(false, state.payload, action.error, true);
         default: 
-            return state || new ApiState(false, new Constructor());
+            return state || new ApiState(false, new Constructor(), {}, false);
     }
 }
 
@@ -49,16 +46,14 @@ const multiApiReducer = (types, Constructor, extendKey, prepare, state, action) 
         let _curr = _state.getValue(key);
         switch (action.type) {
             case types.REQUEST:
-                return _state.setValue(key, new ApiState(true, _curr.payload, null, _curr.status));
+                return _state.setValue(key, new ApiState(true, _curr.payload, null, true));
             case types.RESET:
-                return _state.setValue(key, new ApiState(false, new Constructor()));
+                return _state.setValue(key, new ApiState(false, new Constructor(), {}, false));
             case types.SUCCESS: 
                 action.data = action.data || new Constructor();
-                return _state.setValue(key, new ApiState(false, prepare(action, state), null, _curr.status));
+                return _state.setValue(key, new ApiState(false, prepare(action, state), null, true));
             case types.FAILURE: 
-                return _state.setValue(key, new ApiState(false, _curr.payload, action.error, _curr.status));
-            case types.STATUS: 
-                return _state.setValue(key, new ApiState(_curr.pending, _curr.payload, _curr.error, action.status));
+                return _state.setValue(key, new ApiState(false, _curr.payload, action.error, true));
             default: 
                 return state || new MultuReducerState(Constructor);
         }
@@ -70,8 +65,10 @@ const multiApiReducer = (types, Constructor, extendKey, prepare, state, action) 
 export const boundApiReducer = (types, Constructor, extendKey=null, prepare=(action)=>action.data) => {
     if (typeof extendKey === 'function') {
         return multiApiReducer.bind(null, types, Constructor, extendKey, prepare)
+    } else {
+        return apiReducer.bind(null, types, Constructor, prepare)
     }
-    return apiReducer.bind(null, types, Constructor, prepare)
+    
 }
 
 export function boundReducer(reducerType, Constructor = Object) {
