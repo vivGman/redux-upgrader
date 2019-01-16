@@ -55,10 +55,10 @@ const multiApiReducer = (types, Constructor, extendKey, prepare, state, action) 
             case types.FAILURE: 
                 return _state.setValue(key, new ApiState(false, _curr.payload, action.error, true));
             default: 
-                return state || new MultuReducerState(Constructor);
+                return state instanceof MultuReducerState ? state : new MultuReducerState(Constructor, state);
         }
     } catch(error) {
-        return state || new MultuReducerState(Constructor);
+        return state instanceof MultuReducerState ? state : new MultuReducerState(Constructor, state);
     }
 }
 
