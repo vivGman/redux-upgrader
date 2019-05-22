@@ -15,12 +15,13 @@ class MultuReducerState {
     }
 }
 
-function ApiState(pending=false, payload, error={}, isInited=false) {
+function ApiState(pending=false, payload, error={}, isInited=false, requestedAt=new Date()) {
     this.pending = pending;
     this.payload = payload;
     this.error   = error;
-    this.updatedAt = new Date();
     this.isInited = isInited
+    this.updatedAt = new Date();
+    this.requestedAt = requestedAt
 }
 
 const apiReducer = (types, Constructor, prepare, state, action) => {
@@ -31,7 +32,7 @@ const apiReducer = (types, Constructor, prepare, state, action) => {
             return new ApiState(false, new Constructor(), {}, false);
         case types.SUCCESS: 
             action.data = action.data || new Constructor();
-            return new ApiState(false, prepare(action, state), null, true);
+            return new ApiState(false, action.requestedAt < state.requestedAt ? state.payload : prepare(action, state), null, true);
         case types.FAILURE: 
             return new ApiState(false, state.payload, action.error, true);
         default: 
@@ -51,7 +52,7 @@ const multiApiReducer = (types, Constructor, extendKey, prepare, state, action) 
                 return _state.setValue(key, new ApiState(false, new Constructor(), {}, false));
             case types.SUCCESS: 
                 action.data = action.data || new Constructor();
-                return _state.setValue(key, new ApiState(false, prepare(action, state), null, true));
+                return _state.setValue(key, new ApiState(false, state.requestedprepare(action, state), null, true));
             case types.FAILURE: 
                 return _state.setValue(key, new ApiState(false, _curr.payload, action.error, true));
             default: 
@@ -71,15 +72,30 @@ export const boundApiReducer = (types, Constructor, extendKey=null, prepare=(act
     
 }
 
-export function boundReducer(reducerType, Constructor = Object) {
-    return (state, action) => {
-        switch (action.type) {
-            case reducerType: {
-                return action.data
-            };
-            default: {
-                return state || new Constructor().valueOf()
-            };
+// export function boundReducer(reducerType, Constructor = Object) {
+//     return (state, action) => {
+//         switch (action.type) {
+//             case reducerType: {
+//                 return action.data
+//             };
+//             default: {
+//                 return state || new Constructor().valueOf()
+//             };
+//         }
+//     }
+// }
+
+export function boundReducer(defaultState = null, config = {}) {
+    return (state = defaultState, action) => {
+        if (
+            config.hasOwnProperty(action.type) &&
+            typeof config[action.type] === 'function'
+        ) {
+            return config[action.type](state, action);
+        } else if (config.hasOwnProperty(action.type)) {
+            return config[action.type];
+        } else {
+            return state;
         }
-    }
+    };
 }
