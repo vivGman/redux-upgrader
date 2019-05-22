@@ -52,7 +52,7 @@ const multiApiReducer = (types, Constructor, extendKey, prepare, state, action) 
                 return _state.setValue(key, new ApiState(false, new Constructor(), {}, false));
             case types.SUCCESS: 
                 action.data = action.data || new Constructor();
-                return _state.setValue(key, new ApiState(false, state.requestedprepare(action, state), null, true));
+                return _state.setValue(key, new ApiState(false, prepare(action, state), null, true));
             case types.FAILURE: 
                 return _state.setValue(key, new ApiState(false, _curr.payload, action.error, true));
             default: 
